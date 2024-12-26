@@ -7,7 +7,6 @@ LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME/$TIMESTAMP.log"
 mkdir -p $LOGS_FOLDER
 
 USERID=$(id -u)
-#echo "User ID is: $USERID"
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -31,11 +30,6 @@ VALIDATE(){
     fi
 }
 
-USAGE(){
-    echo -e "$R USAGE:: $N sudo sh 16-redirectors.sh package1 package2..." | tee -a $LOG_FILE
-    exit 1
-}
-
 echo "Script started excuting at $(date)" | tee -a $LOG_FILE
 
 CHECK_ROOT
@@ -45,6 +39,9 @@ VALIDATE $? "Installing MYSQL Server"
 
 systemctl enable mysqld
 VALIDATE $? "Enabled MYSQL"
+
+systemctl start mysqld
+VALIDATE $? "Started MYSQL Server"
 
 mysql_secure_installation --set-root-pass ExpenseApp@1
 VALIDATE $? "Setting up for root password"
